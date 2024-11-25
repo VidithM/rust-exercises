@@ -3,11 +3,34 @@
 //   a `String` field into each variant.
 //   You'll also have to add `thiserror` as a dependency in the `Cargo.toml` file.
 
+use std::fmt;
+use std::fmt::Display;
+
+#[derive(thiserror::Error, Debug)]
 enum TicketNewError {
     TitleCannotBeEmpty,
     TitleTooLong,
     DescriptionCannotBeEmpty,
     DescriptionTooLong,
+}
+
+impl Display for TicketNewError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            TicketNewError::TitleCannotBeEmpty => {
+                return write!(f, "Title cannot be empty");
+            }
+            TicketNewError::TitleTooLong => {
+                return write!(f, "Title cannot be longer than 50 bytes");
+            }
+            TicketNewError::DescriptionCannotBeEmpty => {
+                return write!(f, "Description cannot be empty");
+            }
+            _ => {
+                write!(f, "Description cannot be longer than 500 bytes")
+            }
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
